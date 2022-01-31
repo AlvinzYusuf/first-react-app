@@ -1,24 +1,61 @@
-import logo from './logo.svg';
-import './App.css';
+// import logo from "./logo.svg";
+import "./App.css";
+import React, { useState } from "react";
 
 function App() {
+  const [activity, setactivity] = useState("");
+  const [todos, setTodos] = useState([]);
+
+  function generateID() {
+    return Date.now();
+  }
+
+  function addTodoHandler(e) {
+    e.preventDefault();
+
+    setTodos([
+      ...todos,
+      {
+        id: generateID(),
+        activity,
+      },
+    ]);
+    setactivity("");
+  }
+
+  function removeTodoHandler(todoId) {
+    const filterTodo = todos.filter((todo) => {
+      return todo.id !== todoId;
+    });
+    setTodos(filterTodo);
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <h1>Simple Todo List</h1>
+      <form onSubmit={addTodoHandler}>
+        <input
+          type="text"
+          placeholder="input todo"
+          value={activity}
+          onChange={(e) => {
+            setactivity(e.target.value);
+          }}
+        />
+        <button type="submit">Tambah</button>
+      </form>
+      <ul>
+        {todos.map((todo) => {
+          return (
+            <li key={todo.id}>
+              {todo.activity}
+              <button onClick={removeTodoHandler.bind(this, todo.id)}>
+                Hapus
+              </button>
+            </li>
+          );
+        })}
+      </ul>
+    </>
   );
 }
 
